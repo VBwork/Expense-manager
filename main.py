@@ -1,93 +1,52 @@
-import json
-import os
 from datetime import date
+from Account import *
+from Exspense import *
+from Category import *
 
-expenses = list()
-categories = ['Food', 'Transport', 'Home', 'Close', 'Restoran']
-
-
-def add_expense (money, comment, dt):
-    expense = {'money': money, 'comment': comment, "date": dt}
-    expenses.append(expense)
-
-
-def add_category (name):
-    categories.append(name)
-
-
-def load_data_expense(file_expenses):
-    global expenses
-
-    if os.path.exists(file_expenses):
-        with open('expenses.json', 'r') as openfile:
-            expenses = json.load(openfile)
-
-    return expenses
-
-
-def load_data_categories(file_categories):
-    global categories
-
-    if os.path.exists(file_categories):
-        with open('categories.json', 'r') as openfile:
-            categories = json.load(openfile)
-
-    return categories
-
-
-def menu(expenses, categories):
+def menu():
+    expenses_manager = ExpensesManager()
+    categories_manager = CategoryManager()
+    accounts_manager = AccountManager()
 
     while True:
-        acction = input('Оберіть дію:\n1 - Додати витрату;\n2 - Додати витрату за минулий період;\n3 - Список категорій;\n4 - Додати категорію;\n5 - Статистика витрат; \n6 - Вийти\n')
+        acction = input('Оберіть дію:\n1 - Аккаунти;\n2 - Додати аккаунт;\n3 - Додати витрату;\n4 - Додати витрату за минулий період;\n5 - Статистика витрат;'
+                        '\n6 - Список категорій;\n7 - Додати категорію;\n8 - Вийти\n')
 
         if acction == '1':
-            add_expense(input('Введіть суму витрати: '), input('Додайте коментар до витрати: '), str(date.today()))
+            print(accounts_manager.get_accounts())
 
         elif acction == '2':
-            add_expense(input('Введіть суму витрати: '), input('Додайте коментар до витрати: '), input('Введіть дату витрати: '))
+            account = Accounts(input('Введіть назву аккаунту: '), input('Введіть cуму балансу: '))
+            accounts_manager.add_accounts(account)
 
         elif acction == '3':
-            print(categories)
+            expense = Expense(input('Введіть суму витрати: '), input(f'Оберіть аккаунт: {accounts_manager.get_accounts()}'),
+                              input('Додайте коментар до витрати: '), str(date.today()))
+            expenses_manager.add_expense(expense)
 
         elif acction == '4':
-            add_category(input('Введіть назву категорії: '))
+            expense = Expense(input('Введіть суму витрати: '), input('Додайте коментар до витрати: '), input('Введіть дату витрати: '))
+            expenses_manager.add_expense(expense)
 
         elif acction == '5':
-            print(expenses)
+            print(expenses_manager.get_expenses())
+
+        elif acction == '6':
+            print(categories_manager.get_categories())
+
+        elif acction == '7':
+            category = Category(input('Введіть назву категорії: '))
+            categories_manager.add_category(category)
 
         else:
             print('Роботу завершено')
 
             break
 
-        save_data_expenses(expenses)
-        save_data_categories(categories)
-
-
-def save_data_expenses(expenses):
-    save_expenses = json.dumps(expenses)
-
-    with open('expenses.json', 'w') as f:
-        f.write(save_expenses)
-
-
-def save_data_categories(categories):
-    save_categories = json.dumps(categories)
-
-    with open('category.json', 'w') as f:
-        f.write(save_categories)
-
 
 def main():
-    file_expenses = 'expenses.json'
 
-    file_categories = 'categories.json'
-
-    expenses = load_data_expense(file_expenses)
-
-    categories = load_data_categories(file_categories)
-
-    menu(expenses, categories)
+    menu()
 
 
 if __name__ == '__main__':
