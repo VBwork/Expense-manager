@@ -1,5 +1,5 @@
 import json
-import osgit
+import os
 
 class Expense:
     def __init__(self, money, account_id, comment, dt):

@@ -34,6 +34,10 @@ class AccountManager:
         account.balance -= balance
         self.save_data_accounts()
 
+    def del_account(self, account):
+        self.accounts.pop(int(account))
+        self.save_data_accounts()
+
     def load_data_accounts(self):
         if os.path.exists(self.file_accounts):
             with open(self.file_accounts, 'r') as openfile:

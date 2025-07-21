@@ -25,6 +25,10 @@ class CategoryManager:
         self.categories[str(self.new_category)] = category
         self.save_data_categories()
 
+    def del_category(self, category):
+        self.categories.pop(category)
+        self.save_data_categories()
+
     def get_categories(self):
         return self.categories
 
